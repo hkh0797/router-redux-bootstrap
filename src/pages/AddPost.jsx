@@ -8,7 +8,7 @@ import { postSchema } from "../util/valiationSchema";
 import { Button, Form } from "react-bootstrap";
 import Loading from "../components/Loading";
 
-const AddPost = (props) => {
+const AddPost = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
