@@ -1,15 +1,20 @@
-import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store";
 
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import RootLayout from './pages/RootLayout';
-import ErrorPage from './pages/ErrorPage';
-import Index from './pages/Index';
+import RootLayout from "./pages/RootLayout";
+import ErrorPage from "./pages/ErrorPage";
+import Index from "./pages/Index";
 
 const AddPost = React.lazy(() => import("./pages/AddPost"));
 const EditPost = React.lazy(() => import("./pages/EditPost"));
@@ -23,21 +28,17 @@ const postParamHandler = ({ params }) => {
     });
   }
   // return을 반드시 해줘야 합니다. 안하면 0-3 에러 납니다.
-  return '';
-}
+  return "";
+};
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path='/'
-      element={<RootLayout />}
-      errorElement={<ErrorPage />}
-    >
+    <Route path="/" element={<RootLayout />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Index />} />
-        <Route path='post' element={<Index />} />
+        <Route path="post" element={<Index />} />
         <Route
-          path='post/add'
+          path="post/add"
           element={
             <Suspense fallback="loading please wait...">
               <AddPost />
@@ -45,7 +46,7 @@ const router = createBrowserRouter(
           }
         />
         <Route
-          path='post/:id'
+          path="post/:id"
           element={
             <Suspense fallback="loading please wait...">
               <Details />
@@ -54,7 +55,7 @@ const router = createBrowserRouter(
           loader={postParamHandler}
         />
         <Route
-          path='post/:id/edit'
+          path="post/:id/edit"
           element={
             <Suspense fallback="loading please wait...">
               <EditPost />
@@ -64,11 +65,10 @@ const router = createBrowserRouter(
         />
       </Route>
     </Route>
-
   )
 );
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>

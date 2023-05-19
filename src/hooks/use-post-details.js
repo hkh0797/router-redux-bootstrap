@@ -4,16 +4,15 @@ import { fetchPost } from "../store/postSlice";
 import { useParams } from "react-router-dom";
 
 const usePostDetails = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { loading, error, record } = useSelector((state) => state.posts);
 
-    const { id } = useParams();
-    const dispatch = useDispatch();
-    const { loading, error, record } = useSelector((state) => state.posts);
+  useEffect(() => {
+    dispatch(fetchPost(id));
+  }, [dispatch, id]);
 
-    useEffect(() => {
-        dispatch(fetchPost(id));
-    }, [dispatch, id]);
-
-    return { loading, error, record }
-}
+  return { loading, error, record };
+};
 
 export default usePostDetails;
