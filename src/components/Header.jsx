@@ -16,6 +16,14 @@ const Header = () => {
         <li>
           <NavLink to="/post/add">Add Post</NavLink>
         </li>
+        <li>
+          <NavLink to="/board" end>
+            Board List
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/board/add">Add Board</NavLink>
+        </li>
         <li className="login">
           <NavLink onClick={() => setModalShow(true)}>Login</NavLink>
           <Login show={modalShow} onHide={() => setModalShow(false)} />

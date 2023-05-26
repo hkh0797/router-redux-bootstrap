@@ -15,10 +15,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import RootLayout from "./pages/RootLayout";
 import ErrorPage from "./pages/ErrorPage";
 import Index from "./pages/Index";
+import Board from "./pages/board";
 
 const AddPost = React.lazy(() => import("./pages/AddPost"));
 const EditPost = React.lazy(() => import("./pages/EditPost"));
 const Details = React.lazy(() => import("./pages/Details"));
+
+const AddBoard = React.lazy(() => import("./pages/board/AddBoard"));
+const EditBoard = React.lazy(() => import("./pages/board/EditBoard"));
+const Detail = React.lazy(() => import("./pages/board/Detail"));
 
 const postParamHandler = ({ params }) => {
   if (isNaN(params.id)) {
@@ -59,6 +64,40 @@ const router = createBrowserRouter(
           element={
             <Suspense fallback="loading please wait...">
               <EditPost />
+            </Suspense>
+          }
+          loader={postParamHandler}
+        />
+        <Route
+          path="board/add"
+          element={
+            <Suspense fallback="loading please wait...">
+              <AddBoard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="board"
+          element={
+            <Suspense fallback="loading please wait...">
+              <Board />
+            </Suspense>
+          }
+        />
+        <Route
+          path="board/:id"
+          element={
+            <Suspense fallback="loading please wait...">
+              <Detail />
+            </Suspense>
+          }
+          loader={postParamHandler}
+        />
+        <Route
+          path="board/:id/edit"
+          element={
+            <Suspense fallback="loading please wait...">
+              <EditBoard />
             </Suspense>
           }
           loader={postParamHandler}

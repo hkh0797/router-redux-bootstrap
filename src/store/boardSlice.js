@@ -1,17 +1,15 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = { records: [], loading: false, error: null, record: null };
 
-export const fetchPosts = createAsyncThunk(
-  "posts/fetchPosts",
+export const fetchBoards = createAsyncThunk(
+  "board/fetchBoards",
   async (_, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      // 주소 체크!!
-      const res = await fetch("http://localhost:8080/posts", {
+      const res = await fetch("http://localhost:8080/Board/list", {
         method: "POST",
       });
-      // const res = await fetch("http://localhost:5000/posts");
       const data = await res.json();
       return data;
     } catch (error) {
@@ -20,13 +18,12 @@ export const fetchPosts = createAsyncThunk(
   }
 );
 
-export const fetchPost = createAsyncThunk(
-  "posts/fetchPost",
+export const fetchBoard = createAsyncThunk(
+  "board/fetchBoard",
   async (id, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const res = await fetch(`http://localhost:8080/posts/${id}`);
-      // const res = await fetch(`http://localhost:5000/posts/${id}`);
+      const res = await fetch(`http://localhost:8080/Board/${id}`);
       const data = await res.json();
       return data;
     } catch (error) {
@@ -35,31 +32,15 @@ export const fetchPost = createAsyncThunk(
   }
 );
 
-export const deletePost = createAsyncThunk(
-  "posts/deletePost",
-  async (id, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
-    try {
-      await fetch(`http://localhost:8080/posts/${id}`, {
-        // await fetch(`http://localhost:5000/posts/${id}`, {
-        method: "DELETE",
-      });
-      return id;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const insertPost = createAsyncThunk(
-  "posts/insertPost",
+export const insertBoard = createAsyncThunk(
+  "board/insertBoard",
   async (item, thunkAPI) => {
     const { rejectWithValue, getState } = thunkAPI;
     const { auth } = getState();
     item.userId = auth.id;
 
     try {
-      const res = await fetch("http://localhost:8080/posts/add", {
+      const res = await fetch("http://localhost:8080/Board/add", {
         // const res = await fetch("http://localhost:5000/posts/", {
         method: "POST",
         body: JSON.stringify(item),
@@ -75,13 +56,28 @@ export const insertPost = createAsyncThunk(
   }
 );
 
-export const editPost = createAsyncThunk(
-  "posts/editPost",
+export const deleteBoard = createAsyncThunk(
+  "board/deleteBoard",
+  async (id, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      await fetch(`http://localhost:8080/Board/${id}`, {
+        // await fetch(`http://localhost:5000/posts/${id}`, {
+        method: "DELETE",
+      });
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const editBoard = createAsyncThunk(
+  "board/editBoard",
   async (item, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      const res = await fetch(`http://localhost:8080/posts/${item.id}`, {
-        // const res = await fetch(`http://localhost:5000/posts/${item.id}`, {
+      const res = await fetch(`http://localhost:8080/Board`, {
         method: "PATCH",
         body: JSON.stringify(item),
         headers: {
@@ -96,100 +92,86 @@ export const editPost = createAsyncThunk(
   }
 );
 
-const postSlice = createSlice({
-  name: "posts",
+const boardSlice = createSlice({
+  name: "board",
   initialState,
   reducers: {
     cleanRecord: (state) => {
       state.record = null;
     },
   },
-  // RTK 2.0 버전
-  /**
-   * 프로미스 3가지 상태
-   * @param {string} pending 대기
-   * @param {string} fulfilled 이행
-   * @param {string} rejected 실패
-   *
-   * @returns 리듀서
-   */
   extraReducers: (builder) => {
-    //get post
     builder
-      .addCase(fetchPost.pending, (state) => {
+      .addCase(fetchBoards.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchPost.fulfilled, (state, action) => {
-        state.loading = false;
-        state.record = action.payload;
-      })
-      .addCase(fetchPost.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-
-    //fetch posts
-    builder
-      .addCase(fetchPosts.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
+      .addCase(fetchBoards.fulfilled, (state, action) => {
         state.loading = false;
         state.records = action.payload;
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchBoards.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
 
-    //create post
     builder
-      .addCase(insertPost.pending, (state) => {
+      .addCase(fetchBoard.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(insertPost.fulfilled, (state, action) => {
+      .addCase(fetchBoard.fulfilled, (state, action) => {
+        state.loading = false;
+        state.record = action.payload;
+      })
+      .addCase(fetchBoard.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(insertBoard.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(insertBoard.fulfilled, (state, action) => {
         state.loading = false;
         state.records.push(action.payload);
       })
-      .addCase(insertPost.rejected, (state, action) => {
+      .addCase(insertBoard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
 
-    //delete post
     builder
-      .addCase(deletePost.pending, (state) => {
+      .addCase(deleteBoard.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deletePost.fulfilled, (state, action) => {
+      .addCase(deleteBoard.fulfilled, (state, action) => {
         state.loading = false;
-        state.records = state.records.filter((el) => el.id !== action.payload);
+        state.records = state.records.filter((el) => el.idx !== action.payload);
       })
-      .addCase(deletePost.rejected, (state, action) => {
+      .addCase(deleteBoard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
 
-    //edit post
     builder
-      .addCase(editPost.pending, (state) => {
+      .addCase(editBoard.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(editPost.fulfilled, (state, action) => {
+      .addCase(editBoard.fulfilled, (state, action) => {
         state.loading = false;
         console.log(action.payload);
       })
-      .addCase(editPost.rejected, (state, action) => {
+      .addCase(editBoard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { cleanRecord } = postSlice.actions;
-export default postSlice.reducer;
+export const { cleanRecord } = boardSlice.actions;
+export default boardSlice.reducer;
