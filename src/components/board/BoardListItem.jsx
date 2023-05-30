@@ -1,7 +1,7 @@
-import { Button, ButtonGroup, Form } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const BoardListItem = ({ data, deleteRecord, isLoggedIn, offset, limit }) => {
+const BoardListItem = ({ data, deleteRecord, isLoggedIn, handleChange }) => {
   const navigate = useNavigate();
 
   const deleteHandler = (item) => {
@@ -10,10 +10,15 @@ const BoardListItem = ({ data, deleteRecord, isLoggedIn, offset, limit }) => {
     }
   };
 
-  const records = data.slice(offset, offset + limit).map((el, idx) => (
-    <tr key={el.idx}>
+  const records = data.map((el, idx) => (
+    <tr key={idx}>
       <td>
-        <Form.Check type={"checkbox"} id={`${idx}`} />
+        <input
+          type="checkbox"
+          name={el.title}
+          checked={el?.isChecked || false}
+          onChange={handleChange}
+        />
       </td>
       <td>#{++idx}</td>
       <td>

@@ -1,14 +1,19 @@
 import { memo } from "react";
-import { Form, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import BoardListItem from "./BoardListItem";
 
-const BoardList = ({ data, deleteRecord, isLoggedIn, offset, limit }) => {
+const BoardList = ({ data, deleteRecord, isLoggedIn, handleChange }) => {
   return (
     <Table striped bordered hover>
       <thead>
         <tr>
           <th>
-            <Form.Check type={"checkbox"} />
+            <input
+              type="checkbox"
+              name="allselect"
+              checked={!data.some((data) => data?.isChecked !== true)}
+              onChange={handleChange}
+            />
           </th>
           <th>#</th>
           <th style={{ width: "70%" }}>Title</th>
@@ -21,8 +26,7 @@ const BoardList = ({ data, deleteRecord, isLoggedIn, offset, limit }) => {
           data={data}
           deleteRecord={deleteRecord}
           isLoggedIn={isLoggedIn}
-          offset={offset}
-          limit={limit}
+          handleChange={handleChange}
         />
       </tbody>
     </Table>

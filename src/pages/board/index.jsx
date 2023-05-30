@@ -22,6 +22,17 @@ const Index = () => {
     [dispatch]
   );
 
+  const handleChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "allselect") {
+      const checkedvalue = records.map((data) => {
+        return { ...data, isChecked: checked };
+      });
+      console.log(checkedvalue);
+      // setR(checkedvalue);
+    }
+  };
+
   return (
     <Loading loading={loading} error={error}>
       <label>
@@ -39,11 +50,12 @@ const Index = () => {
         </select>
       </label>
       <BoardList
-        data={records}
+        data={records.slice(offset, offset + limit)}
         deleteRecord={deleteRecord}
         isLoggedIn={isLoggedIn}
         offset={offset}
         limit={limit}
+        handleChange={handleChange}
       />
       <Pagination
         total={records.length}
