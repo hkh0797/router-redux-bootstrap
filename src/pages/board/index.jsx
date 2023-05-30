@@ -25,11 +25,10 @@ const Index = () => {
   const handleChange = (e) => {
     const { name, checked } = e.target;
     if (name === "allselect") {
-      const checkedvalue = records.map((data) => {
+      const checkedvalue = records.slice(offset, offset + limit).map((data) => {
         return { ...data, isChecked: checked };
       });
       console.log(checkedvalue);
-      // setR(checkedvalue);
     }
   };
 
